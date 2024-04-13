@@ -47,8 +47,9 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: Colors.transparent,
         title: const Text('Serial Chat', style: TextStyle(color: Colors.white),),
         centerTitle: true,
       ),
@@ -63,7 +64,7 @@ class _ChatScreenState extends State<ChatScreen> {
               children: [
                 Row(
                   children: [
-                    const Text('Port'),
+                    const Text('Port', style: TextStyle(color: Colors.white)),
                     const SizedBox(width: 8,),
                     DropdownButton(
                       value: selectedPort,
@@ -71,7 +72,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         availablePorts.length,
                         (index) => DropdownMenuItem(
                           value: '${availablePorts[index]}',
-                          child: Text('${availablePorts[index]}'),
+                          child: Text('${availablePorts[index]}', style: const TextStyle(color: Colors.white),),
                         )
                       ),
                       onChanged: (v) => setState(() => selectedPort = v)
@@ -84,14 +85,14 @@ class _ChatScreenState extends State<ChatScreen> {
                   ],
                 ),
 
-                IconButton(onPressed: onRefresh, icon: const Icon(Icons.refresh))
+                IconButton(onPressed: onRefresh, icon: const Icon(Icons.refresh, color: Colors.white,))
               ],
             ),
 
             // 채팅 기록
             Expanded(
               child: Container(
-                color: Colors.grey[100],
+                color: const Color(0xCC222222),
                 padding: const EdgeInsets.all(8.0),
                 child: ListView(
 
@@ -103,7 +104,9 @@ class _ChatScreenState extends State<ChatScreen> {
             Row(
               children: [
                 Expanded(
-                  child: TextField()
+                  child: TextField(
+                    style: const TextStyle(color: Colors.white),
+                  )
                 ),
                 ElevatedButton(onPressed: (){}, child: Text('SEND'))
               ],

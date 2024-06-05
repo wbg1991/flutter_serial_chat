@@ -31,7 +31,7 @@ class _ChatScreenState extends State<ChatScreen> {
     });
 
     debugPrint('_availablePorts length: ${availablePorts.length}');
-    for(final port in availablePorts) {
+    for (final port in availablePorts) {
       debugPrint(port);
     }
   }
@@ -60,14 +60,14 @@ class _ChatScreenState extends State<ChatScreen> {
   void onConnect() {
     if (selectedPort == null) return;
 
-    final portConfig = SerialPortConfig();
-    portConfig.baudRate = 9600;
-    selectedPort!.config = portConfig;
-
     if (!selectedPort!.openReadWrite()) {
       debugPrint('${SerialPort.lastError}');
       return;
     }
+
+    final portConfig = SerialPortConfig();
+    portConfig.baudRate = 9600;
+    selectedPort!.config = portConfig;
 
     reader = SerialPortReader(selectedPort!);
     reader!.stream.listen((data) {
@@ -90,12 +90,12 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void onRefresh() {
-    if(isOpen) return;
+    if (isOpen) return;
     initPorts();
   }
 
   void send(String message) {
-    if(message.isEmpty || !isOpen) return;
+    if (message.isEmpty || !isOpen) return;
 
     final bytes = Uint8List.fromList("$message\n".codeUnits);
     final ret = selectedPort?.write(bytes);
@@ -114,7 +114,10 @@ class _ChatScreenState extends State<ChatScreen> {
       backgroundColor: Colors.transparent,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const Text('Serial Chat', style: TextStyle(color: Colors.white),),
+        title: const Text(
+          'Serial Chat',
+          style: TextStyle(color: Colors.white),
+        ),
         centerTitle: true,
       ),
       body: Padding(
@@ -129,54 +132,61 @@ class _ChatScreenState extends State<ChatScreen> {
                 Row(
                   children: [
                     const Text('Port', style: TextStyle(color: Colors.white)),
-                    const SizedBox(width: 8,),
-                    DropdownButton(
-                      value: selectedPort?.name,
-                      items: createItems(),
-                      onChanged: onChanged
+                    const SizedBox(
+                      width: 8,
                     ),
-                    const SizedBox(width: 8,),
-
+                    DropdownButton(
+                        value: selectedPort?.name,
+                        items: createItems(),
+                        onChanged: onChanged),
+                    const SizedBox(
+                      width: 8,
+                    ),
                     isOpen
-                    ? ElevatedButton(onPressed: onDisconnect, child: const Text('Disconnect'))
-                    : ElevatedButton(onPressed: onConnect, child: const Text('Connect'))
+                        ? ElevatedButton(
+                            onPressed: onDisconnect,
+                            child: const Text('Disconnect'))
+                        : ElevatedButton(
+                            onPressed: onConnect, child: const Text('Connect'))
                   ],
                 ),
-
-                IconButton(onPressed: onRefresh, icon: const Icon(Icons.refresh, color: Colors.white,))
+                IconButton(
+                    onPressed: onRefresh,
+                    icon: const Icon(
+                      Icons.refresh,
+                      color: Colors.white,
+                    ))
               ],
             ),
 
             // 채팅 기록
             Expanded(
-              child: Container(
-                color: const Color(0xCC222222),
-                padding: const EdgeInsets.all(8.0),
-                child: ListView(
-                  itemExtent: 32,
-                  children: List.generate(messages.length, (index) {
-                    return ListTile(
-                      title: Text(
-                          messages[index],
-                          style: const TextStyle(color: Colors.white)
-                      ),
-                    );
-                  }),
-                ),
-              )
-            ),
+                child: Container(
+              color: const Color(0xCC222222),
+              padding: const EdgeInsets.all(8.0),
+              child: ListView(
+                itemExtent: 32,
+                children: List.generate(messages.length, (index) {
+                  return ListTile(
+                    title: Text(messages[index],
+                        style: const TextStyle(color: Colors.white)),
+                  );
+                }),
+              ),
+            )),
 
             // 메시지 입력
             Row(
               children: [
                 Expanded(
-                  child: TextField(
-                    controller: textController,
-                    style: const TextStyle(color: Colors.white),
-                    onSubmitted: (msg)=>send(msg),
-                  )
-                ),
-                ElevatedButton(onPressed: ()=>send(textController.text), child: Text('SEND'))
+                    child: TextField(
+                  controller: textController,
+                  style: const TextStyle(color: Colors.white),
+                  onSubmitted: (msg) => send(msg),
+                )),
+                ElevatedButton(
+                    onPressed: () => send(textController.text),
+                    child: Text('SEND'))
               ],
             )
           ],
